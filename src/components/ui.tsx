@@ -58,7 +58,11 @@ export const Input = forwardRef<
   InputHTMLAttributes<HTMLInputElement>
 >(function Input({ className = "", ...props }, ref) {
   return (
-    <input ref={ref} className={`${controlBase} px-3 ${className}`} {...props} />
+    <input
+      ref={ref}
+      className={`${controlBase} px-3 ${className}`}
+      {...props}
+    />
   );
 });
 
@@ -185,5 +189,18 @@ export function Rec({ children }: { children: ReactNode }) {
       />
       {children}
     </span>
+  );
+}
+
+export function PlayGlyph({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className={className}
+      fill="currentColor"
+      aria-hidden="true"
+    >
+      <path d="M8 5.5v13l11-6.5-11-6.5Z" />
+    </svg>
   );
 }
