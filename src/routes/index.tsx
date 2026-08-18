@@ -3,10 +3,12 @@ import {
   useVoiceUrlQuery,
   type VoiceUrlQueryParams,
 } from "#/hooks/useVoiceUrlQuery";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { useRef, useState } from "react";
 
-export const Route = createFileRoute("/")({ component: Home });
+export const Route = createFileRoute("/")({
+  component: Home,
+});
 
 function Home() {
   const [params, setParams] = useState<VoiceUrlQueryParams>({
@@ -14,34 +16,39 @@ function Home() {
     text: "",
   });
 
-  const selectRef = useRef<HTMLSelectElement | null>(null);
+  const speakerRef = useRef<HTMLInputElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
+
   const speakersQuery = useSpeakersQuery();
   const urlQuery = useVoiceUrlQuery(params, {
     enabled: !!params.speaker && !!params.text,
   });
+
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   return (
-    <div className="p-8 flex flex-col gap-4">
+    <div className="flex flex-col gap-4">
       <form
         className="flex flex-row gap-2"
         onSubmit={(e) => {
           e.preventDefault();
           setParams({
-            speaker: selectRef.current!.value,
+            speaker: speakerRef.current!.value,
             text: inputRef.current!.value,
           });
         }}
       >
         <div className="flex flex-col gap-3">
           <h2 className="text-base font-semibold">Speaker</h2>
-          <select
-            ref={selectRef}
+          <input
+            ref={speakerRef}
+            list="speakers"
             className="rounded border border-solid border-gray-200 px-2 py-1.5 h-10 text-sm"
-          >
+          />
+          <datalist id="speakers">
             {speakersQuery.data?.map((s) => (
               <option key={s}>{s}</option>
             ))}
-          </select>
+          </datalist>
         </div>
         <div className="flex flex-col gap-3">
           <h2 className="text-base font-semibold">Text</h2>
@@ -58,16 +65,19 @@ function Home() {
           GENERATE
         </button>
       </form>
-      {urlQuery.data ? (
+      <div className="flex flex-row gap-3 items-center">
         <audio
           key={params.speaker + "_" + params.text}
           src={urlQuery.data}
+          ref={audioRef}
           controls
           autoPlay
+          onLoadedMetadata={(e) => {
+            console.log(e.currentTarget.duration);
+          }}
         />
-      ) : urlQuery.isLoading ? (
-        <div className="font-mono text-base">generating...</div>
-      ) : null}
+      </div>
+      <Outlet />
     </div>
   );
 }
