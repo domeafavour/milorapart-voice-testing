@@ -1,5 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
+import { PageHeader } from "#/components/PageHeader";
+import {
+  Button,
+  Equalizer,
+  Field,
+  Label,
+  Readout,
+  Rec,
+  Select,
+  Textarea,
+  panelClass,
+} from "#/components/ui";
 
 export const Route = createFileRoute("/browser")({
   component: RouteComponent,
@@ -42,18 +54,19 @@ function RouteComponent() {
 
   return (
     <div className="flex flex-col gap-8">
-      <header className="anim-rise flex flex-col gap-2">
-        <p className="eyebrow">Browser Api · Web Speech</p>
-        <h1 className="font-display text-5xl font-semibold uppercase leading-none tracking-wide text-fg">
-          Browser<span className="text-amber">.</span>
-        </h1>
-        <p className="max-w-md text-sm leading-relaxed text-steel">
-          Test local browser voices against the AI synth on the other tab.
-        </p>
-      </header>
+      <PageHeader
+        eyebrow="Browser Api · Web Speech"
+        title={
+          <>
+            Browser<span className="text-amber">.</span>
+          </>
+        }
+      >
+        Test local browser voices against the AI synth on the other tab.
+      </PageHeader>
 
       <form
-        className="panel anim-rise flex flex-col gap-5 p-6"
+        className={`${panelClass} animate-rise flex flex-col gap-5 p-6`}
         style={{ animationDelay: "80ms" }}
         onSubmit={(e) => {
           e.preventDefault();
@@ -88,16 +101,15 @@ function RouteComponent() {
         }}
       >
         <div className="grid gap-5 sm:grid-cols-2">
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="voice" className="label">
+          <Field>
+            <Label htmlFor="voice">
               Voice
               <span className="normal-case tracking-normal text-steel">
                 {voices.length} found
               </span>
-            </label>
-            <select
+            </Label>
+            <Select
               id="voice"
-              className="input select"
               value={voiceName}
               onChange={(e) => {
                 setVoiceName(e.target.value);
@@ -108,15 +120,15 @@ function RouteComponent() {
                   {v.name}
                 </option>
               ))}
-            </select>
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="rate" className="label">
+            </Select>
+          </Field>
+          <Field>
+            <Label htmlFor="rate">
               Rate
               <span className="normal-case tracking-normal text-amber">
                 {rate.toFixed(2)}×
               </span>
-            </label>
+            </Label>
             <input
               id="rate"
               type="range"
@@ -129,44 +141,31 @@ function RouteComponent() {
                 setRate(e.target.valueAsNumber);
               }}
             />
-          </div>
+          </Field>
         </div>
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="text" className="label">
-            Text
-          </label>
-          <textarea
+        <Field>
+          <Label htmlFor="text">Text</Label>
+          <Textarea
             id="text"
             ref={inputRef}
             rows={2}
-            className="input"
             placeholder="text to speak"
           />
-        </div>
+        </Field>
         <div className="flex items-center justify-between gap-4">
-          <button
-            type="submit"
-            className="btn-primary"
-            disabled={pending || reading}
-          >
+          <Button type="submit" disabled={pending || reading}>
             Speak
-          </button>
+          </Button>
           <div className="flex items-center gap-5">
             {reading ? (
-              <span className="rec">
-                <span className="eq" aria-hidden="true">
-                  <span />
-                  <span />
-                  <span />
-                  <span />
-                  <span />
-                </span>
+              <Rec>
+                <Equalizer size="sm" />
                 on air
-              </span>
+              </Rec>
             ) : null}
-            <span className="mono-readout tabular-nums">
+            <Readout className="tabular-nums">
               {(readTime / 1000).toFixed(2)}s
-            </span>
+            </Readout>
           </div>
         </div>
       </form>

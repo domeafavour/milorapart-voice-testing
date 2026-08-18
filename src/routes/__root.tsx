@@ -9,6 +9,7 @@ import { TanStackDevtools } from "@tanstack/react-devtools";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
 import { client } from "#/client";
+import { Equalizer } from "#/components/ui";
 import { QueryClientProvider } from "@tanstack/react-query";
 import "../styles.css";
 
@@ -43,12 +44,7 @@ function NavLink({
 function Brand() {
   return (
     <Link to="/" className="flex items-center gap-3">
-      <span className="eq eq-sm" aria-hidden="true">
-        <span />
-        <span />
-        <span />
-        <span />
-      </span>
+      <Equalizer size="sm" bars={4} />
       <span className="font-display text-lg font-semibold uppercase tracking-wide text-fg">
         Milo <span className="text-amber">Voice</span> Lab
       </span>
@@ -86,13 +82,7 @@ function RootComponent() {
           <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-5 py-4 font-mono text-[10px] uppercase tracking-[0.2em] text-steel sm:px-6">
             <span>Milo Voice Lab</span>
             <span className="flex items-center gap-2">
-              <span className="eq eq-xs" aria-hidden="true">
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-              </span>
+              <Equalizer size="xs" />
               api · milorapart.top
             </span>
           </div>
